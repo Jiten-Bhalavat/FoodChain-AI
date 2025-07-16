@@ -1,0 +1,352 @@
+{
+  "agent_id": "",
+  "channel": "voice",
+  "last_modification_timestamp": 1745534211569,
+  "agent_name": "FoodChain Order Booking ",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 3,
+    "conversation_flow_id": "conversation_flow_8cce90d2509a"
+  },
+  "webhook_url": "https://hook.us2.make.com/36ouom4guocusj4akd6kqaqjmej584p5",
+  "language": "en-US",
+  "opt_out_sensitive_data_storage": false,
+  "opt_in_signed_url": false,
+  "version": 3,
+  "is_published": false,
+  "version_title": "v2",
+  "post_call_analysis_model": "gpt-4o-mini",
+  "voice_id": "11labs-Grace",
+  "max_call_duration_ms": 3600000,
+  "interruption_sensitivity": 0.8,
+  "voicemail_detection_timeout_ms": 30000,
+  "retellLlmData": null,
+  "conversationFlow": {
+    "conversation_flow_id": "conversation_flow_8cce90d2509a",
+    "version": 3,
+    "global_prompt": "You are a warm, friendly, and organized virtual assistant that helps users place catering or service orders on behalf of their agency. Guide users through the process step-by-step. \nBefore we begin, may I please know which language you're most comfortable using?\nI’ll continue the whole conversation in that language to make things easier for you!\nCollect the following details clearly:\nAgency Name\nPreferred Day\nPreferred Time\nFood/Dietary Restrictions\nContact Number\n\nIf any information is missing, gently prompt the user for it. After collecting all details, summarize the order clearly and ask for final confirmation.\n\nOnce the user confirms, store the information in a Google Sheet using the following JSON format:\n{\n  \"Id\": \"001\",\n  \"Agency Name\": \"Tasty Treats\",\n  \"Day\": \"Monday\",\n  \"Time\": \"12:30 PM\",\n  \"Food Restrictions\": \"No peanuts, vegetarian only\",\n  \"Contact Number\": \"+1234567890\"\n}\nThe ID should auto-increment for each new order. Always maintain a positive tone and offer help if the user seems unsure about any detail.",
+    "nodes": [
+      {
+        "instruction": {
+          "type": "prompt",
+          "text": "You are a friendly and helpful AI voice agent for a food ordering service. When a user starts interacting, greet them politely and ask what they'd like to do. Your available options are:\n\n1.) Start a new food order\n\n2.) Add items to an existing order\n\n3.) Remove items from an order\n\n4.) Cancel the order\n"
+        },
+        "name": "Welcome Node",
+        "edges": [
+          {
+            "condition": "Starts a New order",
+            "id": "edge-1",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "Starts a New order"
+            },
+            "destination_node_id": "node-1745511464888"
+          },
+          {
+            "condition": "Add/Remove the Items",
+            "id": "edge-2",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "Add/Remove the Items"
+            }
+          },
+          {
+            "condition": "Cancels the order",
+            "id": "edge-1745403998784",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "Cancels the order"
+            }
+          }
+        ],
+        "start_speaker": "agent",
+        "id": "start-node-1745403713079",
+        "type": "conversation",
+        "display_position": {
+          "x": 20.16032143372951,
+          "y": 17.13900176111025
+        }
+      },
+      {
+        "name": "Agency Name",
+        "edges": [
+          {
+            "condition": "User proivdes the Agency Name",
+            "id": "edge-1745511464888",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "User proivdes the Agency Name"
+            },
+            "destination_node_id": "node-1745511524148"
+          }
+        ],
+        "id": "node-1745511464888",
+        "type": "conversation",
+        "display_position": {
+          "x": 380.7418835171851,
+          "y": 55.20466606662447
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "From Which Agency You want to Order your Food."
+        }
+      },
+      {
+        "name": "Day and Time",
+        "edges": [
+          {
+            "condition": "User Mentions the Time and Day",
+            "id": "edge-1745511524148",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "User Mentions the Time and Day"
+            },
+            "destination_node_id": "node-1745513259702"
+          }
+        ],
+        "id": "node-1745511524148",
+        "type": "conversation",
+        "display_position": {
+          "x": 492.0423279073601,
+          "y": 598.9424005451567
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Ask for the Day and Time for that Particular Agency \n\n\n## If the user mentions day like Today or like Next week or this week, ask for a particular day."
+        }
+      },
+      {
+        "name": "Checks Day and Time",
+        "edges": [
+          {
+            "condition": "User provides the Dietary Restrictions\n",
+            "id": "edge-1745513259702",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "User provides the Dietary Restrictions\n"
+            },
+            "destination_node_id": "node-1745514239512"
+          }
+        ],
+        "id": "node-1745513259702",
+        "type": "conversation",
+        "display_position": {
+          "x": 863.2029825219968,
+          "y": 245.96440627115072
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "## Actions to Take from the Knowledge Base\n'''\nCheck if that Day and Time is Available or not \n'''\n\nIf it is available , ask for the food items he wants and also the dietary Restrictions\n\n## if the time and Day is not available,Ask for another Day and Time and checks if it is available or not "
+        }
+      },
+      {
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "Yes\n",
+            "id": "edge-1745514239512",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "Yes\n"
+            },
+            "destination_node_id": "node-1745514319123"
+          },
+          {
+            "condition": "NO\n",
+            "id": "edge-1745514312790",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "NO\n"
+            },
+            "destination_node_id": "node-1745514322303"
+          }
+        ],
+        "id": "node-1745514239512",
+        "type": "conversation",
+        "display_position": {
+          "x": 1272.8798701022629,
+          "y": 22.862013414921947
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Are you able to travel to a food pantry using a private vehicle or public transit?\n\n"
+        }
+      },
+      {
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "User Provides the Contact Number",
+            "id": "edge-1745514319123",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "User Provides the Contact Number"
+            },
+            "destination_node_id": "node-1745515821996"
+          }
+        ],
+        "id": "node-1745514319123",
+        "type": "conversation",
+        "display_position": {
+          "x": 2268.7650985756777,
+          "y": 107.9983044987004
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Great, Your Order has been placed and ask for the Contact Number for sending the confirmation.\n\n"
+        }
+      },
+      {
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "Yes\n",
+            "id": "edge-1745514322303",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "Yes\n"
+            },
+            "destination_node_id": "node-1745514319123"
+          },
+          {
+            "condition": "No\n",
+            "id": "edge-1745514369585",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "No\n"
+            },
+            "destination_node_id": "node-1745514571926"
+          }
+        ],
+        "id": "node-1745514322303",
+        "type": "conversation",
+        "display_position": {
+          "x": 1444.2394551642997,
+          "y": 701.1248380389495
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Can a relative or friend can travel to a pantry for you?\n\n"
+        }
+      },
+      {
+        "name": "End Call",
+        "id": "node-1745514510093",
+        "type": "end",
+        "display_position": {
+          "x": 2894.1419497333013,
+          "y": 449.61734933917865
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Politely end the call"
+        }
+      },
+      {
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "User Provides the Different Agency Name",
+            "id": "edge-1745514571926",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "User Provides the Different Agency Name"
+            },
+            "destination_node_id": "node-1745511524148"
+          },
+          {
+            "condition": "User confirms the order",
+            "id": "edge-1745514680836",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "User confirms the order"
+            },
+            "destination_node_id": "node-1745514319123"
+          }
+        ],
+        "id": "node-1745514571926",
+        "type": "conversation",
+        "display_position": {
+          "x": 1813.2021778908227,
+          "y": 218.2921525498179
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "## Check that Agency is Providing the Home delivery or not in the Distribution Model . If yes, Say so and say Confirms the order\n\n## If not, ask for the Different Agency Name "
+        }
+      },
+      {
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "User Acknowledges it ",
+            "id": "edge-1745515821996",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "User Acknowledges it "
+            },
+            "destination_node_id": "node-1745514510093"
+          }
+        ],
+        "id": "node-1745515821996",
+        "type": "conversation",
+        "display_position": {
+          "x": 2357.425763502888,
+          "y": 639.6190572597982
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "## Confirm the Contact Number.\n\nAnd say Thanks for contacting CAFB for the Food. Wish them well."
+        }
+      },
+      {
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "User provides the Particular Language'",
+            "id": "edge-1745532577070",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "User provides the Particular Language'"
+            },
+            "destination_node_id": "start-node-1745403713079"
+          }
+        ],
+        "id": "node-1745532577070",
+        "type": "conversation",
+        "display_position": {
+          "x": -411.47166659179015,
+          "y": 131.42332265869223
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Ask for Which Language they are comfortable to talk too and then ask make all the conversations in that particular language"
+        }
+      }
+    ],
+    "start_node_id": "node-1745532577070",
+    "start_speaker": "user",
+    "tools": [
+      {
+        "tool_id": "tool-1745516281682",
+        "event_type_id": 0,
+        "cal_api_key": "",
+        "timezone": "America/Los_Angeles",
+        "name": "book_appointment",
+        "description": "When users ask to book an appointment, book it on the calendar.",
+        "type": "book_appointment_cal"
+      }
+    ],
+    "model_choice": {
+      "type": "cascading",
+      "model": "gpt-4o"
+    },
+    "knowledge_base_ids": [],
+    "begin_tag_display_position": {
+      "x": -647.4392604786171,
+      "y": 304.8181882449483
+    },
+    "is_published": false
+  },
+  "llmURL": null
+}
